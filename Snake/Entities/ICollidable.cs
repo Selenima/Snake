@@ -4,7 +4,7 @@ namespace Snake.Entities
 {
     public interface ICollidable
     {
-        bool CheckCollision(Point point); // Нужен для проверки коллизии с переданной точкой. 
+        public bool CheckCollision(Point point); // Нужен для проверки коллизии с переданной точкой. 
         
         // Позже добавится метод для проверки текущего положения головы.
     }
