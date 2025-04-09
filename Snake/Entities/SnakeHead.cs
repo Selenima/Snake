@@ -26,6 +26,13 @@ namespace Snake.Entities
             snake.Body.AddLast(new Point(last.X, last.Y)); // WT
             return snake;
         }
+
+        public void Move(Point newPosition)
+        {
+            Position = newPosition;
+            Body.AddFirst(newPosition);
+            Body.RemoveLast();
+        }
     }
 
     public enum Direction
