@@ -55,8 +55,9 @@ namespace Snake.Logic
 
             if (IsWallCollision(newHeadPos) || Snake.CheckCollision(newHeadPos))
             {
-                GameOver?.Invoke();
-                throw new WallCollisionException();
+                GameOver?.Invoke(); 
+                return;
+                //throw new WallCollisionException();
             }
 
             if (CurrentFood.CheckCollision(newHeadPos))
