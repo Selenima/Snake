@@ -47,7 +47,23 @@ namespace Program
             
             var game = new GameField(20, 20);
             Console.CursorVisible = false;
+            
+            game.GameOver += () => 
+            {
+                int score = game.Snake.Body.Count - 1;
+                player.Sessions.Add(new GameSession { Date = DateTime.Now, Score = score });
+    
+                if (score > player.HighScore)
+                    player.HighScore = score;
 
+                Console.Clear();
+                Console.WriteLine("Game Over!");
+                Console.WriteLine($"Игрок: {player.PlayerName}");
+                Console.WriteLine($"Счёт: {score} | Рекорд: {player.HighScore}");
+                Console.WriteLine("Нажмите любую клавишу для выхода...");
+                Environment.Exit(0);  // Завершаем программу
+            };
+            
             try
             {
                 while (true)
@@ -76,13 +92,13 @@ namespace Program
                     Thread.Sleep(400);
 
                 }
-            }
+            } // Невозможная ветка
             catch (WallCollisionException ex)
             {
                 int score = game.Snake.Body.Count - 1;
                 player.Sessions.Add(new GameSession 
                 { 
-                    Date = DateTime.Now, 
+                    Date = DateTime.Now,
                     Score = score 
                 });
                 
