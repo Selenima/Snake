@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace SnakeGame.Models
 {
+    public class GameStats
+    {
+        public List<PlayerStats> Players { get; set; } = new();
+    }
+
     public class PlayerStats
     {
         public string PlayerName { get; set; }

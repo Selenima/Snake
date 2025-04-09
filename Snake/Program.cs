@@ -15,21 +15,31 @@ namespace Program
             
             const string statsFile = "stats.json";
 
-            PlayerStats stats;
+            GameStats stats;
 
             if (File.Exists(statsFile))
             {
                 var json = File.ReadAllText(statsFile);
-                stats = JsonSerializer.Deserialize<PlayerStats>(json)!;
+                stats = JsonSerializer.Deserialize<GameStats>(json) ?? new GameStats();
                 
             }
             else
             {
-                Console.Write("Введите ваш ник: ");
-                string nickname = Console.ReadLine()!;
-                stats = new PlayerStats { PlayerName = nickname };
+                
+                stats = new GameStats();
             }
-
+            
+            Console.Write("Введите ваш ник: ");
+            string nickname = Console.ReadLine()!;
+            
+            
+            var player = stats.Players.FirstOrDefault(p => p.PlayerName == nickname);
+            if (player == null)
+            {
+                player = new PlayerStats { PlayerName = nickname };
+                stats.Players.Add(player);
+            }
+            
             AppDomain.CurrentDomain.ProcessExit += (s, e) =>
             {
                 File.WriteAllText(statsFile, JsonSerializer.Serialize(stats));
@@ -63,22 +73,29 @@ namespace Program
                     }
                     
                     game.Update();
-                    Thread.Sleep(200);
+                    Thread.Sleep(400);
 
                 }
             }
             catch (WallCollisionException ex)
             {
                 int score = game.Snake.Body.Count - 1;
-                stats.Sessions.Add(new GameSession {Date = DateTime.Now, Score = score});
+                player.Sessions.Add(new GameSession 
+                { 
+                    Date = DateTime.Now, 
+                    Score = score 
+                });
                 
-                if (score > stats.HighScore)
-                    stats.HighScore = score;
+                if (score > player.HighScore)
+                    player.HighScore = score;
+                
                 
                 Console.Clear();
                 Console.WriteLine(ex.Message);
-                Console.WriteLine($"Игрок: {stats.PlayerName}");
+                Console.WriteLine($"Игрок: {player.PlayerName}");
                 Console.WriteLine($"Final Score: {game.Snake.Body.Count - 1}");
+                Console.WriteLine("Нажмите любую клавишу для выхода...");
+                Console.ReadKey();
             }
 
         }
